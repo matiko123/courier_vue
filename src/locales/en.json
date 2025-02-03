@@ -1,0 +1,31 @@
+{
+    "dashboard": "Dashboard",
+    "ab_courior": "AB Courior",
+    "abs_courior": "ABS Courior",
+    "operation": "Operation",
+    "sales": "Sales",
+    "analytics": "Analytics",
+    "general_reports": "General Reports",
+    "transactions": "Transactions",
+    "entities": "Entities",
+    "settings": "Settings",
+    "users": "Users",
+    "out_ward_operation": "Outward Operation",
+    "in_ward_operation": "Inward Operation",
+    
+    
+    "apps": "Apps",
+    "tables": "Tables",
+    "datatables": "Data Tables",
+    "forms": "Forms",
+    "authentication": "Authentication",
+    "drag_and_drop": "Drag and Drop",
+    "maps": "Maps",
+    "charts": "Charts",
+    "starter_kit": "Starter Kit",
+    "documentation": "Documentation",
+    "ui_kit": "UI Kit",
+    "more": "More",
+    "pages": "Pages",
+    "widgets": "Widgets"
+}
