@@ -103,7 +103,7 @@ export default {
               Sn: index + 1,
               parcel_value: item.parcel_value.toLocaleString(),
             })) || [];
-          console.log('Fetched Data in the offload:', this.dispatch);
+          // console.log('Fetched Data in the offload:', this.dispatch);
         })
         .catch((error) => {
           this.$refs.toastNotification.showErrorToast(`Error fetching Offloads Data: ${error.message}`);

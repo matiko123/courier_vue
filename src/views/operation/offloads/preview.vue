@@ -27,7 +27,7 @@
               </div>
             <v-client-table :data="offloads" :columns="columns">
               <template #action="{ row }">
-                <a :href="`http://127.0.0.1:8000/api/v1/offloads-pdf?offload_id=${row.offload_id}`" 
+                <a :href="`https://abcourier.co.tz/admin-api/api/v1/offloads-pdf?offload_id=${row.offload_id}`" 
                   class="btn btn-secondary btn-sm p-1 me-2" 
                   :class="{ disabled: loading_offloads }" 
                   @click="loading_offloads = true">Print</a>
@@ -48,8 +48,8 @@ import ToastNotification from '@/components/ToastNotification.vue';
 
 const token = localStorage.getItem('token');
 const axiosInstance = axios.create({
-   baseURL: 'http://127.0.0.1:8000/api/v1/',
-  //  baseURL: 'https://abcourier.co.tz/admin-api/api/v1/',
+  //  baseURL: 'http://127.0.0.1:8000/api/v1/',
+   baseURL: 'https://abcourier.co.tz/admin-api/api/v1/',
   headers: { Authorization: `Bearer ${token}` },
 });
 
@@ -95,7 +95,7 @@ export default {
             parcel_value: item.parcel_value.toLocaleString(),
             date_time_key:  `${item.date} ${item.time}`,
           })) || [];
-          console.log('Fetched Data in the offload:', this.offloads);
+          // console.log('Fetched Data in the offload:', this.offloads);
         })
         .catch((error) => {
           this.$refs.toastNotification.showErrorToast(`Error fetching Offloads Data: ${error.message}`);

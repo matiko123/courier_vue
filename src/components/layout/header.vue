@@ -685,6 +685,11 @@
               <li>
                 <router-link v-if="userHasPermission('CAN VIEW DISPATCH REPORT')" to="/operation/report/collections/dispatch">Dispatch Report</router-link>
               </li>
+
+              <li>
+                <router-link v-if="userHasPermission('CAN VIEW REPORT')" to="/operation/report/collections/dispatch">Offloading vs Dispatch</router-link>
+              </li>
+
             </ul>
           </li>
 

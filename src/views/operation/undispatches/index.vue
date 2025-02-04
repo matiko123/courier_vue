@@ -74,8 +74,8 @@
   
   const token = localStorage.getItem('token');
   const axiosInstance = axios.create({
-    // baseURL: 'https://abcourier.co.tz/admin-api/api/v1/',
-    baseURL: 'http://127.0.0.1:8000/api/v1/',
+    baseURL: 'https://abcourier.co.tz/admin-api/api/v1/',
+    // baseURL: 'http://127.0.0.1:8000/api/v1/',
     headers: { Authorization: `Bearer ${token}` },
   });
   
@@ -125,7 +125,7 @@
       
       this.report = this.undispatch.length === 0 ? false : true;  // Set report to false if empty
 
-      console.log('Fetched Undispatch data:', this.undispatch);
+      // console.log('Fetched Undispatch data:', this.undispatch);
     })
     .catch((error) => {
       this.$refs.toastNotification.showErrorToast(`Error fetching Undispatch Data: ${error.message}`);
@@ -146,7 +146,7 @@
                 ...item,
                 Sn: index + 1,
               })) || [];
-            console.log('Fetched Branches data:', this.branches);
+            // console.log('Fetched Branches data:', this.branches);
           })
           .catch((error) => {
             this.$refs.toastNotification.showErrorToast(`Error fetching branches: ${error.message}`);
