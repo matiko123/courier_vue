@@ -495,7 +495,10 @@
                 <router-link v-if="userHasPermission('CAN CONSOLIDATION')" to="/operation/consolidations">Consolidations</router-link>
               </li>
               <li>
-                <router-link to="/operation/dispatch">Dispatches</router-link>
+                <router-link to="/operation/dispatches">Dispatches</router-link>
+              </li>
+              <li>
+                <router-link to="/operation/manifest">Manifest</router-link>
               </li>
               <li>
                 <router-link to="/operation/undispatch">Un-dispatches</router-link>
@@ -687,9 +690,9 @@
               </li>
 
               <li>
-                <router-link v-if="userHasPermission('CAN VIEW REPORT')" to="/operation/report/collections/dispatch">Offloading vs Dispatch</router-link>
-              </li>
+                <router-link v-if="userHasPermission('CAN VIEW REPORT')" to="/operation/report/offloads-dispatch">Offloading vs Dispatch</router-link>
 
+              </li>
             </ul>
           </li>
 

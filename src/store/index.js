@@ -99,6 +99,9 @@ const store = createStore({
     userPermissions: [],
   },
   mutations: {
+    toggleSideBar(state) {
+      state.is_show_sidebar = !state.is_show_sidebar;
+    },
     setLayout(state, layout) {
       state.layout = layout;
     },

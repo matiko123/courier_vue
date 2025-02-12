@@ -23,37 +23,27 @@
         <div class="custom-table">
           <div class="invoice-inbox p-4">
             <div class="text-center">
-              <div class="d-flex justify-content-end align-items-center">
- 
-  <multiselect
-    v-model="selectedVehicle"
-    :options="vehicles"
-    :searchable="true"
-    :placeholder="'Select a vehicle'"
-    label="vehicle"
-    track-by="courier_vehicle_id"
-    class="form-control w-25 mx-2"
-    @select="onVehicleSelect"
-  ></multiselect>
-  <input type="date" class="form-control w-25" v-model="searchDate" @change="fetchDispatch">
-</div>
-          <div v-if="loading_dispatch" >
+              <input type="date" class="form-control w-25 ms-auto" v-model="searchDate" @change="fetchDispatch">
+              <div v-if="loading_dispatch" >
                 <span class="text-danger text-lg"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Please wait ...</span>
               </div>
             </div>
           
             <v-client-table :data="dispatch" :columns="columns">
               <template #action="{ row }">
-               <a :href="`https://abcourier.co.tz/admin-api/api/v1/single-dispatch-pdf?parcel_dispatch_id=${row.parcel_dispatch_id}`" 
-                 
+                <a :href="`https://abcourier.co.tz/admin-api/api/v1/reports/manifest-pdf?courier_vehicle_id=${row.courier_vehicle_id}`" 
                    class="btn btn-secondary btn-sm p-1 me-2" 
                    :class="{ disabled: loading_dispatch }" 
                    @click="loading_dispatch = true">Print</a>
 
                    
-                   <!-- <router-link :to="'vehicle-dispatch/' + row.courier_vehicle_id + '/' + row.departure_date" class="btn btn-success btn-sm p-1 me-2">
-                     View
-                   </router-link> -->
+                   <router-link :to="'vehicle-dispatch/' + row.courier_vehicle_id + '/' + row.departure_date" class="btn btn-success btn-sm p-1 me-2">
+                     Dispatches
+                   </router-link>
+
+                   <router-link :to="'vehicle-dispatch-parcels/' + row.courier_vehicle_id" class="btn btn-info btn-sm p-1 me-2">
+                     Parcels
+                   </router-link>
 
               </template>
             </v-client-table>
@@ -74,7 +64,6 @@ import ToastNotification from '@/components/ToastNotification.vue';
 const token = localStorage.getItem('token');
 const axiosInstance = axios.create({
   baseURL: 'https://abcourier.co.tz/admin-api/api/v1/',
-  // baseURL: 'http://127.0.0.1:8000/api/v1/',
   headers: { Authorization: `Bearer ${token}` },
 });
 
@@ -86,12 +75,8 @@ export default {
   data() {
     return {
       dispatch: [],
-      vehicles:[],
-      vehicle:'',
       loading_dispatch: false,
       searchDate: new Date().toISOString().split('T')[0], // Default to today's date
-      selectedVehicle:null,
-      courier_Vehicle_id:null,
     };
   },
 
@@ -100,11 +85,10 @@ export default {
       return [
         'Sn',
         'courier_vehicle',
-        'from',
-        'destination',
+        'route',
         'total_quantity',
-        'total_parcel_value',
-        'date_time_key',
+        'parcel_value',
+        'datetime_key',
         'action',
       ];
     },
@@ -114,15 +98,16 @@ export default {
     fetchDispatch() {
       this.loading_dispatch = true;
       axiosInstance
-        .get(`/dispatch?date=${this.searchDate} &vehicle_id=${this.vehicle}`)
+        .get(`reports/manifest-preview?date=${this.searchDate}${this.routeId ? `&route_id=${this.routeId}` : ''}`)
         .then((response) => {
           this.dispatch = response.data.data
             .filter(item => item.total_quantity > 0)
             .map((item, index) => ({
               ...item,
               Sn: index + 1,
-              total_parcel_value: item.total_parcel_value.toLocaleString(),
+              parcel_value: item.parcel_value.toLocaleString(),
             })) || [];
+          // console.log('Fetched Data in the offload:', this.dispatch);
         })
         .catch((error) => {
           this.$refs.toastNotification.showErrorToast(`Error fetching Dispatch Data: ${error.message}`);
@@ -131,26 +116,6 @@ export default {
           this.loading_dispatch = false;
         });
     },
-    fetchVehicles() {
-      this.loading_dispatch = true;
-      axiosInstance
-        .get(`/vehicles`)
-        .then((response) => {
-          this.vehicles = response.data.data
-        })
-        .catch((error) => {
-          this.$refs.toastNotification.showErrorToast(`Error fetching Vehicles Data: ${error.message}`);
-        })
-        .finally(() => {
-          this.loading_dispatch = false;
-        });
-    },
-
-    onVehicleSelect(selectedVehicle){
-      this.vehicle=selectedVehicle.courier_vehicle_id;
-      this.fetchDispatch();
-    },
-
   },
 
   watch: {
@@ -167,7 +132,6 @@ export default {
 
   mounted() {
     this.fetchDispatch();
-    this.fetchVehicles();
   },
 };
 </script>

@@ -148,18 +148,41 @@ const routes = [
         meta: { layout: 'app', requiresAuth: true },
     },
     // offload route ends
+    // dispatch offload route starts
+    {
+        path: '/operation/report/offloads-dispatch',
+        name: 'offload-dispatches-report',
+        component: () => import('../views/operation/offloadsDispatch/'),
+        meta: { layout: 'app', requiresAuth: true },
+    },
+    // dispatch offload route ends
+    {
+        path: '/operation/manifest',
+        name: 'dispatches-report',
+        component: () => import('../views/operation/dispatches/dispatch_report/manifest.vue'),
+        meta: { layout: 'app', requiresAuth: true },
+    },
+
     {
         path: '/operation/dispatch',
-        name: 'dispatches-report',
-        component: () => import('../views/operation/dispatches/dispatch_report/preview.vue'),
-        meta: { layout: 'app', requiresAuth: true },
+        name: 'vehicle-dispatches-report',
+        component: () => import('../views/operation/dispatches/dispatch_report/dispatch.vue'),
+        meta: { layout: 'app', requiresAuth: true }
     },
     {
-        path: '/operation/vehicle-dispatch/:vehicleId',
-        name: 'vehicle-dispatches-report',
-        component: () => import('../views/operation/dispatches/dispatch_report/vehicle_dispatch.vue'),
+        path: '/operation/vehicle-dispatch-parcels/:vehicleId',
+        name: 'vehicle-dispatch-parcels',
+        component: () => import('../views/operation/dispatches/dispatch_report/singleParcel.vue'),
         meta: { layout: 'app', requiresAuth: true },
     },
+
+    {
+        path: '/operation/vehicle-dispatch/:vehicleId/:date',
+        name: 'vehicle-dispatches-report',
+        component: () => import('../views/operation/dispatches/dispatch_report/vehicleDispatch.vue'),
+        meta: { layout: 'app', requiresAuth: true },
+    },
+    
     {
         path: '/settings/branches',
         name: 'setting-branch-index',
