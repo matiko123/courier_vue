@@ -169,6 +169,14 @@ const routes = [
         component: () => import('../views/operation/dispatches/dispatch_report/dispatch.vue'),
         meta: { layout: 'app', requiresAuth: true }
     },
+
+    {
+        path: '/operation/report/vehicle-summary',
+        name: 'vehicle-summary',
+        component: () => import('../views/operation/offloadsDispatch/vehicleSummary.vue'),
+        meta: { layout: 'app', requiresAuth: true }
+    },
+
     {
         path: '/operation/vehicle-dispatch-parcels/:vehicleId',
         name: 'vehicle-dispatch-parcels',

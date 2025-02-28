@@ -8,8 +8,9 @@
             <div class="page-header d-flex">
               <nav class="breadcrumb-one ms-auto" aria-label="breadcrumb">
                 <ol class="breadcrumb pt-2 ml-3">
-                  <li class="breadcrumb-item"><a href="javascript:;">Operation</a></li>
-                  <li class="breadcrumb-item active" aria-current="page"><span>Dispatches</span></li>
+                  <li class="breadcrumb-item">Operation</li>
+                  <li class="breadcrumb-item " aria-current="page"><router-link to="/operation/manifest"><span>Manifest</span></router-link></li>
+                  <li class="breadcrumb-item active" aria-current="page"><router-link to="/operation/dispatches/"><span>Dispatches</span></router-link></li>
                 </ol>
               </nav>
             </div>
@@ -22,9 +23,21 @@
       <div class="col-xl-12 mb-3">
         <div class="custom-table">
           <div class="invoice-inbox p-4">
+<table class="table-bordered " style="font-size: 1.2em;">
+    <tr>
+        <td >Vehicle :</td>
+        <td >&nbsp; {{ vehicle }} &nbsp;</td>
+    </tr>
+    <tr>
+        <td>Date :</td>
+        <td>&nbsp;{{ searchDate }} &nbsp;</td>
+    </tr>
+</table>
+
+
+
             <div class="text-center">
-              <div class="d-flex justify-content-end align-items-center"><div>date {{ searchDate }} and vehicle {{ vehicle }}</div>
-</div>
+        
           <div v-if="loading_dispatch" >
                 <span class="text-danger text-lg"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Please wait ...</span>
               </div>
@@ -74,7 +87,7 @@ export default {
   data() {
     return {
       dispatch: [],
-      vehicle:'no vehicle',
+      vehicle:'',
       loading_dispatch: false,
       searchDate: 'no date',
     };
@@ -84,8 +97,9 @@ export default {
     columns() {
       return [
         'Sn',
-        'courier_vehicle',
-        'from',
+        'tracking_number',
+        'created_by',
+        'source',
         'destination',
         'total_quantity',
         'total_parcel_value',
@@ -108,7 +122,11 @@ export default {
               Sn: index + 1,
               total_parcel_value: item.total_parcel_value.toLocaleString(),
             })) || [];
-            console.log("data :",this.dispatch);
+
+        if (response.data.data.length > 0 && response.data.data[0].courier_vehicle) {
+        this.vehicle = response.data.data[0].courier_vehicle;
+      }
+
         })
         .catch((error) => {
           this.$refs.toastNotification.showErrorToast(`Error fetching Dispatch Data: ${error.message}`);

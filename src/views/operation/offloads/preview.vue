@@ -22,7 +22,24 @@
       <div class="col-xl-12 mb-3">
         <div class="custom-table">
           <div class="invoice-inbox p-4 text-center">
-            <div v-if="loading_offloads" >
+            <div class="d-flex justify-content-end align-items-center">
+ 
+
+ <multiselect
+v-model="selectedVehicle"
+:options="vehicles"
+:searchable="true"
+:placeholder="'Select a vehicle'"
+label="customLabel"
+track-by="courier_vehicle_id"
+class="form-control w-25 mx-2"
+@select="onVehicleSelect"
+></multiselect>
+
+
+<input type="date" class="form-control w-25" v-model="searchDate" @change="fetchVehicles">
+</div>
+            <div v-if="loading_spinner" >
                 <span class="text-danger text-lg"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Please wait ...</span>
               </div>
             <v-client-table :data="offloads" :columns="columns">
@@ -30,7 +47,7 @@
                 <a :href="`https://abcourier.co.tz/admin-api/api/v1/offloads-pdf?offload_id=${row.offload_id}`" 
                   class="btn btn-secondary btn-sm p-1 me-2" 
                   :class="{ disabled: loading_offloads }" 
-                  @click="loading_offloads = true">Print</a>
+                  target="_blank">Print</a>
               </template>
             </v-client-table>
           </div>
@@ -61,7 +78,11 @@ export default {
   data() {
     return {
       offloads: [],
-      loading_offloads: false,
+      vehicles:[],
+      loading_spinner: false,
+      selectedVehicle:null,
+      searchDate: new Date().toISOString().split('T')[0], 
+      vehicle:'',
     };
   },
 
@@ -69,30 +90,36 @@ export default {
     columns() {
       return [
         'Sn',
+        'tracking_number',
+        'offloaded_by',
         'vehicle',
-        'route',
+        'source',
+        'destination',
         'total_quantity',
-        'parcel_value',
+        'total_parcel_value',
         'date_time_key',
-        // 'offloaded_by',
-        // 'handed_over_by',
         'action',
       ];
     },
   },
 
   methods: {
+    onVehicleSelect(selectedVehicle){
+      this.vehicle=selectedVehicle.courier_vehicle_id;
+      this.fetchOffloads();
+    },
+
     fetchOffloads() {
-      this.loading_offloads = true;
+      this.loading_spinner = true;
       axiosInstance
-        .get('offloads')
+      .get(`/offloads?date=${this.searchDate} &vehicle_id=${this.vehicle}`)
         .then((response) => {
           this.offloads = response.data.data
           .filter(item => item.total_quantity > 0)
           .map((item, index) => ({
             ...item,
             Sn: index + 1,
-            parcel_value: item.parcel_value.toLocaleString(),
+            total_parcel_value: item.total_parcel_value.toLocaleString(),
             date_time_key:  `${item.date} ${item.time}`,
           })) || [];
           // console.log('Fetched Data in the offload:', this.offloads);
@@ -101,9 +128,27 @@ export default {
           this.$refs.toastNotification.showErrorToast(`Error fetching Offloads Data: ${error.message}`);
         })
         .finally(() => {
-          this.loading_offloads = false;
+          this.loading_spinner = false;
         });
     },
+
+    fetchVehicles() {
+  axiosInstance
+    .get(`/offload-vehicles?offload_date=${this.searchDate}`)
+    .then((response) => {
+      this.vehicles = (response.data.data || []).map(v => ({
+        ...v,
+        customLabel: `${v.vehicle} - ${v.time}`
+      }));
+    })
+    .catch((error) => {
+      this.$refs.toastNotification.showErrorToast(`Error fetching Vehicles Data: ${error.message}`);
+      this.vehicles = [];
+    })
+    .finally(() => {
+
+    });
+},
   },
 
   mounted() {

@@ -8,8 +8,8 @@
             <div class="page-header d-flex">
               <nav class="breadcrumb-one ms-auto" aria-label="breadcrumb">
                 <ol class="breadcrumb pt-2 ml-3">
-                  <li class="breadcrumb-item"><a href="javascript:;">Operation</a></li>
-                  <li class="breadcrumb-item active" aria-current="page"><span>Dispatches</span></li>
+                  <li class="breadcrumb-item">Operation</li>
+                  <li class="breadcrumb-item " aria-current="page"><router-link to="/operation/manifest"><span>Manifest</span></router-link></li>
                 </ol>
               </nav>
             </div>
